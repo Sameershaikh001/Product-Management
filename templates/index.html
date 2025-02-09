@@ -1,23 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Management</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 </head>
 <body>
-    <h1>All Products</h1>
-    <a href="{{ url_for('add_product') }}">Add Product</a>
-    <table border="1">
-        <tr><th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th></tr>
-        {% for product in products %}
-        <tr>
-            <td>{{ product.id }}</td>
-            <td>{{ product.name }}</td>
-            <td>{{ product.price }}</td>
-            <td>{{ product.quantity }}</td>
-            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
-        </tr>
-        {% endfor %}
+
+    <h1>Product Management</h1>
+
+    <!-- Search Box -->
+    <input type="text" id="searchBox" placeholder="Search Product..." onkeyup="searchProduct()">
+    
+    <!-- Add Product Button -->
+    <a href="{{ url_for('add') }}" class="btn add-btn">➕ Add Product</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price (₹)</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="productTable">
+            {% for product in products %}
+            <tr>
+                <td class="product-name">{{ product['name'] }}</td>
+                <td>₹{{ product['price'] }}</td>
+                <td>{{ product['quantity'] }}</td>
+                <td>
+                    <a href="{{ url_for('update', product_name=product['name']) }}" class="btn edit-btn">✏ Edit</a>
+                    <a href="{{ url_for('delete', product_name=product['name']) }}" class="btn delete-btn">❌ Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+
 </body>
 </html>
