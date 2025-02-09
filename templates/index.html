@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Product Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>All Products</h1>
+    <a href="{{ url_for('add_product') }}">Add Product</a>
+    <table border="1">
+        <tr><th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th></tr>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.quantity }}</td>
+            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
