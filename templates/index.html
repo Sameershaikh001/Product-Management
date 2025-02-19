@@ -34,7 +34,7 @@
                 <td>{{ product['quantity'] }}</td>
                 <td>
                     <a href="{{ url_for('update', product_name=product['name']) }}" class="btn edit-btn">✏ Edit</a>
-                    <a href="{{ url_for('delete', product_name=product['name']) }}" class="btn delete-btn">❌ Delete</a>
+                    <button class="btn delete-btn" onclick="confirmDelete('{{ product.id }}')">🗑 Delete</button>
                 </td>
             </tr>
             {% endfor %}
