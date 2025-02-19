@@ -1,5 +1,8 @@
 import mysql.connector
+from database import get_db_connection
+from flask_bcrypt import Bcrypt
 
+bcrypt = Bcrypt()
 # MySQL Connection Configuration
 db_config = {
     "host": "localhost",
@@ -44,3 +47,60 @@ def delete_product(product_id):
     cursor.execute("DELETE FROM products WHERE id=%s", (product_id,))
     conn.commit()
     conn.close()
+
+
+# Create Users Table
+def create_users_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) UNIQUE NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+# Create Products Table
+def create_products_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS products (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            price DECIMAL(10,2) NOT NULL,
+            quantity INT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+# Initialize tables
+create_users_table()
+create_products_table()
+
+# Function to register user
+def register_user(username, email, password):
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", 
+                   (username, email, hashed_password))
+    conn.commit()
+    conn.close()
+
+# Function to verify user login
+def verify_user(email, password):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+    user = cursor.fetchone()
+    conn.close()
+    if user and bcrypt.check_password_hash(user['password'], password):
+        return user
+    return None
+

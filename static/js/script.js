@@ -11,3 +11,9 @@ function searchProduct() {
         }
     });
 }
+function confirmDelete(productId) {
+    let confirmation = confirm("Are you sure you want to delete this product?");
+    if (confirmation) {
+        window.location.href = `/delete/${productId}`;
+    }
+}
